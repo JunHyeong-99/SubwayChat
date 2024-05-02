@@ -2,6 +2,7 @@ package com.cloud.SubwayChat.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class User extends TimeStamp {
     @Column
     private SubwayLine line;
 
+    @Builder
     public User(String nickName, SubwayLine line) {
         this.nickName = nickName;
         this.line = line;
