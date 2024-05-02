@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user_tb")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Getter
 public class User extends TimeStamp {
 

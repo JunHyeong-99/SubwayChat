@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>사용자 생성</title>
+</head>
+<body>
+<h1>사용자 등록</h1>
+<form action="#" th:action="@{/createUser}" th:object="${user}" method="post">
+    <p>닉네임: <input type="text" th:field="*{nickName}" /></p>
+    <p>지하철 라인:
+        <select th:field="*{line}">
+            <option th:each="line : ${lines}" th:value="${line}" th:text="${line.lineName}">Line</option>
+        </select>
+    </p>
+    <p><button type="submit">등록</button></p>
+</form>
+</body>
+</html>
