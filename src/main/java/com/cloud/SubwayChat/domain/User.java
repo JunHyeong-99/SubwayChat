@@ -1,7 +1,28 @@
 package com.cloud.SubwayChat.domain;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
-public class User {
+@Table(name = "user_tb")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
+public class User extends TimeStamp {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @Column
+    private String nickName;
+
+    @Column
+    private SubwayLine line;
+
+    public User(String nickName, SubwayLine line) {
+        this.nickName = nickName;
+        this.line = line;
+    }
 }
