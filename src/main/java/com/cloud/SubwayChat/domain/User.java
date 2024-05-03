@@ -1,15 +1,12 @@
 package com.cloud.SubwayChat.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "user_tb")
 @NoArgsConstructor
-@Getter
+@Getter @Setter
 public class User extends TimeStamp {
 
     @Id

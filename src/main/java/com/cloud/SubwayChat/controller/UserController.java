@@ -26,6 +26,7 @@ public class UserController {
 
     @PostMapping("/createUser")
     public String join(@ModelAttribute User user) {
+        System.out.println(user.getNickName() + "--" + user.getLine());
         userService.join(user.getNickName(), user.getLine());
 
         return "redirect:/";
