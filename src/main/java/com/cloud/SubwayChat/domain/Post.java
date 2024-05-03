@@ -37,8 +37,9 @@ public class Post {
         this.type = type;
     }
 
-    public void updatePost(String title, String content){
+    public void updatePost(String title, String content, PostType type){
         this.title = title;
         this.content = content;
+        this.type = type;
     }
 }

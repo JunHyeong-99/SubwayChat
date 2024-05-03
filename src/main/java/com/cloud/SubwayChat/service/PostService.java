@@ -54,16 +54,17 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(Long postId, Long userId, String title, String content){
+    public boolean updatePost(Long postId, Long userId, String title, String content, PostType type){
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
         );
 
         // 권한 없음
-        if(!userId.equals(post.getUser().getId())){
-            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
+        if(userId == null || !userId.equals(post.getUser().getId())){
+            return true;
         }
+        post.updatePost(title, content, type);
 
-        post.updatePost(title, content);
+        return false;
     }
 }

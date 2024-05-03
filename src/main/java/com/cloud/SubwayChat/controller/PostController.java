@@ -61,8 +61,8 @@ public class PostController {
     @GetMapping("/posts/update/{id}")
     public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("USER_ID");
-        Post post = postService.findPostById(id);
 
+        Post post = postService.findPostById(id);
         if (post == null || !userId.equals(post.getUser().getId())) {
             return "redirect:/posts?error=no_permission";
         }
@@ -70,5 +70,17 @@ public class PostController {
         model.addAttribute("post", post);
         model.addAttribute("types", PostType.values());
         return "updatePost";
+    }
+
+    @PostMapping("/posts/update/{id}")
+    public String updatePost(@PathVariable Long id, @ModelAttribute Post post, HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+
+        // 권한이 없으면 에러 처리 (주소를 통해 바로 수정하려는 시도 방지)
+        if(postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType())){
+            return "redirect:/posts?error=no_permission";
+        }
+
+        return "redirect:/posts";
     }
 }
