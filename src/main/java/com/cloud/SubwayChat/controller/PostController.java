@@ -3,10 +3,10 @@ package com.cloud.SubwayChat.controller;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,5 +24,17 @@ public class PostController {
         postService.createPost(post.getTitle(), post.getContent(), post.getType(), userId);
 
         return "redirect:/posts";
+    }
+
+    @GetMapping("/posts")
+    public String findPostList(Model model, @RequestParam(defaultValue = "0") int page) {
+        Page<Post> pagePosts = postService.findPostList(page);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", pagePosts.getTotalPages());
+        model.addAttribute("totalItems", pagePosts.getTotalElements());
+        model.addAttribute("posts", pagePosts.getContent());
+
+        return "posts";
     }
 }

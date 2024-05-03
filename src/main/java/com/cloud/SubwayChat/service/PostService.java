@@ -40,7 +40,7 @@ public class PostService {
     @Transactional
     public Page<Post> findPostList(int pageNo){
         Pageable pageable = PageRequest.of(pageNo, 10);
-        
+
         return postRepository.findAll(pageable);
     }
 }
