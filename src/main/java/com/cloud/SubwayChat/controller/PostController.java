@@ -27,6 +27,7 @@ public class PostController {
         return "redirect:/posts";
     }
 
+    // 게시글 작성 폼으로 이동하기 위해 사용
     @GetMapping("/posts/new")
     public String createPostForm(Model model) {
         model.addAttribute("post", new Post());
@@ -35,6 +36,7 @@ public class PostController {
         return "createPost";
     }
 
+    // 게시글 목록 조회
     @GetMapping("/posts")
     public String findPostList(Model model, @RequestParam(defaultValue = "0") int page) {
         Page<Post> pagePosts = postService.findPostList(page);
@@ -44,6 +46,14 @@ public class PostController {
         model.addAttribute("totalItems", pagePosts.getTotalElements());
         model.addAttribute("posts", pagePosts.getContent());
 
-        return "posts";
+        return "postsList";
+    }
+
+    @GetMapping("/posts/{id}")
+    public String findPostById(Model model, @PathVariable Long id) {
+        Post post = postService.findPostById(id);
+        model.addAttribute("post", post);
+
+        return "postDetail";
     }
 }
