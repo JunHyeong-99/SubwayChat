@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>사용자 등록</h1>
-<form action="#" th:action="@{/createUser}" th:object="${user}" method="post">
+<form action="#" th:action="@{/join}" th:object="${user}" method="post">
     <p>닉네임: <input type="text" th:field="*{nickName}" /></p>
     <p>지하철 라인:
         <select th:field="*{line}">

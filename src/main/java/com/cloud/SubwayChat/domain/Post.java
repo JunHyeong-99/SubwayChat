@@ -16,6 +16,10 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column
     private String title;
 
@@ -26,7 +30,8 @@ public class Post {
     private PostType type;
 
     @Builder
-    public Post(String title, String content, PostType type) {
+    public Post(User user ,String title, String content, PostType type) {
+        this.user = user;
         this.title = title;
         this.content = content;
         this.type = type;
