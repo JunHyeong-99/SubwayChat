@@ -36,4 +36,9 @@ public class Post {
         this.content = content;
         this.type = type;
     }
+
+    public void updatePost(String title, String content){
+        this.title = title;
+        this.content = content;
+    }
 }
