@@ -60,5 +60,7 @@
   <p>게시 유형: <span th:text="${post.type}"></span></p>
 </div>
 <a href="/posts" class="button">목록으로 돌아가기</a>
+<!-- Edit Button -->
+<a th:href="@{/posts/update/{id}(id=${post.id})}" class="button">수정</a>
 </body>
 </html>

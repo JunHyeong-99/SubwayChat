@@ -3,6 +3,7 @@ package com.cloud.SubwayChat.controller;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.domain.PostType;
 import com.cloud.SubwayChat.service.PostService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -55,5 +56,19 @@ public class PostController {
         model.addAttribute("post", post);
 
         return "postDetail";
+    }
+
+    @GetMapping("/posts/update/{id}")
+    public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+        Post post = postService.findPostById(id);
+
+        if (post == null || !userId.equals(post.getUser().getId())) {
+            return "redirect:/posts?error=no_permission";
+        }
+
+        model.addAttribute("post", post);
+        model.addAttribute("types", PostType.values());
+        return "updatePost";
     }
 }
