@@ -1,5 +1,7 @@
 package com.cloud.SubwayChat.service;
 
+import com.cloud.SubwayChat.core.errors.CustomException;
+import com.cloud.SubwayChat.core.errors.ExceptionCode;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.domain.PostType;
 import com.cloud.SubwayChat.domain.User;
@@ -42,5 +44,11 @@ public class PostService {
         Pageable pageable = PageRequest.of(pageNo, 10);
 
         return postRepository.findAll(pageable);
+    }
+
+    @Transactional
+    public Post findPostById(Long id){
+        return postRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ExceptionCode.POST_NOT_FOUND));
     }
 }
