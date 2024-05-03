@@ -1,6 +1,7 @@
 package com.cloud.SubwayChat.controller;
 
 import com.cloud.SubwayChat.domain.Post;
+import com.cloud.SubwayChat.domain.PostType;
 import com.cloud.SubwayChat.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,14 @@ public class PostController {
         postService.createPost(post.getTitle(), post.getContent(), post.getType(), userId);
 
         return "redirect:/posts";
+    }
+
+    @GetMapping("/posts/new")
+    public String createPostForm(Model model) {
+        model.addAttribute("post", new Post());
+        model.addAttribute("types", PostType.values());
+
+        return "createPost";
     }
 
     @GetMapping("/posts")

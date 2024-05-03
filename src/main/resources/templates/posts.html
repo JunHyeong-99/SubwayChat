@@ -2,16 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>게시글 목록</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    .post {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .post h2 {
+      color: #007BFF;
+    }
+    .post p {
+      color: #666;
+    }
+    ul.pagination {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul.pagination li {
+      display: inline;
+      margin-right: 5px;
+    }
+    ul.pagination li a {
+      text-decoration: none;
+      color: #007BFF;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+    }
+    ul.pagination li a:hover {
+      background-color: #eee;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
 <h1>게시글 목록</h1>
-<div th:each="post : ${posts}">
-  <h2 th:text="${post.title}">제목</h2>
-  <p th:text="${post.content}">내용</p>
+<a href="/posts/new" class="button">게시글 생성</a>
+<div th:each="post : ${posts}" class="post">
+  <h2>
+    <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+  </h2>
 </div>
 
 <div>
-  <ul>
+  <ul class="pagination">
     <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
       <a th:href="@{/posts(page=${i})}" th:text="${i + 1}">Page number</a>
     </li>

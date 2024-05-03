@@ -22,10 +22,12 @@ public class UserService {
                 .line(line)
                 .build();
 
+        userRepository.save(user);
+
         // 세션에 사용자 정보 저장
         session.setAttribute("USER_ID", user.getId());
         session.setAttribute("NICKNAME", user.getNickName());
 
-        return userRepository.save(user);
+        return user;
     }
 }
