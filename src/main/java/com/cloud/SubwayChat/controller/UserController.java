@@ -3,6 +3,7 @@ package com.cloud.SubwayChat.controller;
 import com.cloud.SubwayChat.domain.SubwayLine;
 import com.cloud.SubwayChat.domain.User;
 import com.cloud.SubwayChat.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +25,9 @@ public class UserController {
         return "createUser";
     }
 
-    @PostMapping("/createUser")
-    public String join(@ModelAttribute User user) {
-        userService.join(user.getNickName(), user.getLine());
+    @PostMapping("/join")
+    public String join(@ModelAttribute User user, HttpSession session) {
+        userService.join(user.getNickName(), user.getLine(), session);
 
         return "redirect:/";
     }

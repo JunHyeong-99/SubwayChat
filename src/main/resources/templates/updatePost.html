@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시글 수정</title>
+</head>
+<body>
+<h1>게시글 수정</h1>
+<form th:action="@{/posts/update/{id}(id=${post.id})}" th:object="${post}" method="post">
+  <input type="hidden" name="_method" value="put" />
+  <p>제목: <input type="text" th:field="*{title}" /></p>
+  <p>내용:
+    <textarea th:field="*{content}"></textarea>
+  </p>
+  <p>유형:
+    <select th:field="*{type}">
+      <option th:each="type : ${types}" th:value="${type}" th:text="${type.value}"></option>
+    </select>
+  </p>
+  <p><button type="submit">수정 완료</button></p>
+</form>
+<a href="/posts" class="button">목록으로 돌아가기</a>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>게시글 조회</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    h1 {
+      color: #333;
+    }
+    .post {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+    .post h2 {
+      color: #007BFF;
+    }
+    .post p {
+      color: #666;
+    }
+    ul.pagination {
+      list-style-type: none;
+      padding: 0;
+    }
+    ul.pagination li {
+      display: inline;
+      margin-right: 5px;
+    }
+    ul.pagination li a {
+      text-decoration: none;
+      color: #007BFF;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+    }
+    ul.pagination li a:hover {
+      background-color: #eee;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<h1>게시글 세부 정보</h1>
+<div class="post">
+  <h2 th:text="${post.title}">제목</h2>
+  <p th:text="${post.content}">내용</p>
+  <p>게시 유형: <span th:text="${post.type}"></span></p>
+</div>
+<a href="/posts" class="button">목록으로 돌아가기</a>
+<!-- Edit Button -->
+<a th:href="@{/posts/update/{id}(id=${post.id})}" class="button">수정</a>
+</body>
+</html>
