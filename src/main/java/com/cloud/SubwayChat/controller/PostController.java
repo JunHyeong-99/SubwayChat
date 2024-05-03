@@ -53,18 +53,32 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public String findPostById(Model model, @PathVariable Long id) {
         Post post = postService.findPostById(id);
+
+        // 존재하지 않은 게시글이면 에러
+        if(post == null){
+            return "redirect:/posts?notExist";
+        }
+
         model.addAttribute("post", post);
 
         return "postDetail";
     }
 
     @GetMapping("/posts/update/{id}")
-    public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("USER_ID");
+    public String updatePostForm(@PathVariable Long id, @SessionAttribute("USER_ID") Long userId, Model model) {
+        if (userId == null) {
+            return "redirect:/login";
+        }
 
         Post post = postService.findPostById(id);
-        if (post == null || !userId.equals(post.getUser().getId())) {
-            return "redirect:/posts?error=no_permission";
+
+        // 존재하지 않는 게시글
+        if (post == null){
+            return "redirect:/posts?notExist";
+        }
+        // 권한 없음
+        if(!userId.equals(post.getUser().getId())) {
+            return "redirect:/posts?noPermission";
         }
 
         model.addAttribute("post", post);
@@ -73,12 +87,14 @@ public class PostController {
     }
 
     @PostMapping("/posts/update/{id}")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Post post, HttpSession session) {
-        Long userId = (Long) session.getAttribute("USER_ID");
+    public String updatePost(@PathVariable Long id, @ModelAttribute Post post, @SessionAttribute("USER_ID") Long userId) {
+        if (userId == null) {
+            return "redirect:/login";
+        }
 
-        // 권한이 없으면 에러 처리 (주소를 통해 바로 수정하려는 시도 방지)
+        // 권한이 없음 (주소를 통해 바로 수정하려는 시도 방지)
         if(postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType())){
-            return "redirect:/posts?error=no_permission";
+            return "redirect:/posts?noPermission";
         }
 
         return "redirect:/posts";

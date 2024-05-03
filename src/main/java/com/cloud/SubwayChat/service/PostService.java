@@ -48,21 +48,18 @@ public class PostService {
 
     @Transactional
     public Post findPostById(Long id){
-        return postRepository.findById(id).orElseThrow(
-                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
-        );
+        return postRepository.findById(id).orElse(null);
     }
 
     @Transactional
     public boolean updatePost(Long postId, Long userId, String title, String content, PostType type){
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
-        );
+        Post post = postRepository.findById(postId).orElse(null);
 
         // 권한 없음
-        if(userId == null || !userId.equals(post.getUser().getId())){
+        if(post == null || !userId.equals(post.getUser().getId())){
             return true;
         }
+
         post.updatePost(title, content, type);
 
         return false;
