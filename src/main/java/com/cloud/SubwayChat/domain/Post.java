@@ -1,6 +1,7 @@
 package com.cloud.SubwayChat.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ public class Post {
     @Column
     private PostType type;
 
+    @Builder
     public Post(String title, String content, PostType type) {
         this.title = title;
         this.content = content;
