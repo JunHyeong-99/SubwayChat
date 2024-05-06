@@ -23,5 +23,5 @@ public class ChatRoom {
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
     private List<Message> messageList = new ArrayList<>();
-    
+
 }
