@@ -21,21 +21,16 @@ public class Message extends TimeStamp {
     @Column(name = "roomId")
     private String roomId;
 
-    @Column(name = "receiver")
-    private String receiver;
-
     @Column(name = "message")
     private String message;
 
     @Column(name = "sentTime")
     private String sentTime;
 
-    // 1.
     @ManyToOne
-    @JoinColumn(name = "roomId", referencedColumnName = "roomId", insertable = false, updatable = false)
-    private MessageRoom messageRoom;
+    @JoinColumn(insertable = false, updatable = false)
+    private ChatRoom chatRoom;
 
-    // 대화 저장
     public Message(String sender, String roomId, String message) {
         super();
         this.sender = sender;
