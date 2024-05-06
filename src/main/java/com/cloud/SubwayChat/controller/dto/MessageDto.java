@@ -1,5 +1,6 @@
 package com.cloud.SubwayChat.controller.dto;
 
+import com.cloud.SubwayChat.domain.Message;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
