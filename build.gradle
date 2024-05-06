@@ -41,6 +41,10 @@ dependencies {
 
 	// MySQL
 	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// WebSocket
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
