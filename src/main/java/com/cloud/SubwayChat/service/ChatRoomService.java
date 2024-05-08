@@ -50,14 +50,16 @@ public class ChatRoomService {
     }
 
     // chatRoom 생성 관리자가 미리 지하철 노선도에 따른 chatRoom을 생성해 둠
-    public boolean createRoom(SubwayLine subwayLine) {
-        if (chatRoomRepository.existsBySubwayLine(subwayLine)) return false;
-        ChatRoomDto chatRoomDto = ChatRoomDto.create(subwayLine);
-        ChatRoom chatRoom = chatRoomDto.toEntity();
-        chatRoomRepository.save(chatRoom);
-        // chatRoom 생성 redis CHAT_ROOM에 저장
-        opsHashMessageRoom.put(Chat_Rooms, chatRoomDto.getRoomId(), chatRoomDto);
-        return true;
+    public void createRoom() {
+        for (SubwayLine subwayLine : SubwayLine.values()) {
+            if (!chatRoomRepository.existsBySubwayLine(subwayLine)) {
+                ChatRoomDto chatRoomDto = ChatRoomDto.create(subwayLine);
+                ChatRoom chatRoom = chatRoomDto.toEntity();
+                chatRoomRepository.save(chatRoom);
+                // chatRoom 생성 redis CHAT_ROOM에 저장
+                opsHashMessageRoom.put(Chat_Rooms, chatRoomDto.getRoomId(), chatRoomDto);
+            }
+        }
     }
     // 채팅방 입장 topic등록, 들어가는 것 이미 존재하는 chatRoom이어야 한다.
     public void enterChatRoom(String roomId) {
@@ -70,7 +72,7 @@ public class ChatRoomService {
         }
     }
 
-    // redis 채널에서 쪽지방 조회
+    // redis 채널에서 채팅방 조회
     public ChannelTopic getTopic(String roomId) {
         return topics.get(roomId);
     }
