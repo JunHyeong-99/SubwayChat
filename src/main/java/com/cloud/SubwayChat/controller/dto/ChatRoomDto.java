@@ -34,4 +34,11 @@ public class ChatRoomDto implements Serializable {       // Redis 에 저장되�
                 .subwayLine(this.subwayLine)
                 .build();
     }
+    public static ChatRoomDto toDto(ChatRoom chatRoom) {
+        return ChatRoomDto.builder()
+                .id(chatRoom.getId())
+                .roomId(chatRoom.getRoomId())
+                .subwayLine(chatRoom.getSubwayLine())
+                .build();
+    }
 }
