@@ -19,6 +19,7 @@ public class ChatRoom {
     @Column(unique = true) // redis에 저장하기 위한 String roomId
     private String roomId;
 
+    @Enumerated(value = EnumType.STRING)
     private SubwayLine subwayLine;
 
     @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
