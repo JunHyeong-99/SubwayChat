@@ -72,6 +72,11 @@ public class ChatRoomService {
         }
     }
 
+    public List<ChatRoomDto> getAllChatRoom() {
+        List<ChatRoom> chatRooms = chatRoomRepository.findAll();
+        return chatRooms.stream().map(ChatRoomDto::toDto).toList();
+    }
+
     // redis 채널에서 채팅방 조회
     public ChannelTopic getTopic(String roomId) {
         return topics.get(roomId);
