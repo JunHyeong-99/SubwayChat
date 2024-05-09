@@ -46,7 +46,7 @@
 </div>
 <a href="/posts" class="button">목록으로 돌아가기</a>
 <!-- Edit Button -->
-<a th:href="@{/posts/update/{id}(id=${post.id})}" class="button">수정</a>
+<a th:href="@{/posts/{id}/update(id=${post.id})}" class="button">수정</a>
 
 <!-- JavaScript to toggle edit forms -->
 <script>
