@@ -2,9 +2,11 @@ package com.cloud.SubwayChat.service;
 
 import com.cloud.SubwayChat.core.errors.CustomException;
 import com.cloud.SubwayChat.core.errors.ExceptionCode;
+import com.cloud.SubwayChat.domain.Comment;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.domain.PostType;
 import com.cloud.SubwayChat.domain.User;
+import com.cloud.SubwayChat.repository.CommentRepository;
 import com.cloud.SubwayChat.repository.PostRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -22,15 +24,16 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
     private final EntityManager entityManager;
 
     @Transactional
     public void createPost(String title, String content, PostType type, Long userId){
         // 프록시 객체 사용
-        User user = entityManager.getReference(User.class, userId);
+        User userRef = entityManager.getReference(User.class, userId);
 
         Post post = Post.builder()
-                .user(user)
+                .user(userRef)
                 .title(title)
                 .content(content)
                 .type(type)
@@ -67,5 +70,20 @@ public class PostService {
         post.updatePost(title, content, type);
 
         return false;
+    }
+
+    @Transactional
+    public void createComment(String content, Long userId, Long postId){
+        // 프록시 객체 사용
+        User userRef = entityManager.getReference(User.class, userId);
+        Post postRef = entityManager.getReference(Post.class, postId);
+
+        Comment comment = Comment.builder()
+                .user(userRef)
+                .post(postRef)
+                .content(content)
+                .build();
+
+        commentRepository.save(comment);
     }
 }
