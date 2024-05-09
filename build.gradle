@@ -25,6 +25,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//embedded-redis
+	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
+	// redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
@@ -37,6 +41,10 @@ dependencies {
 
 	// MySQL
 	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// WebSocket
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
