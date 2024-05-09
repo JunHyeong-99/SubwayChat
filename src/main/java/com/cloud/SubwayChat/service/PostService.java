@@ -109,7 +109,7 @@ public class PostService {
         );
 
         if(!userId.equals(comment.getUser().getId())){
-            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
+            throw new CustomException(ExceptionCode.POST_AUTHORITY_FORBIDDEN);
         }
 
         comment.updateComment(content);
@@ -117,7 +117,7 @@ public class PostService {
 
     private void checkPostAuthority(Long userId, Post post){
         if(!userId.equals(post.getUser().getId())){
-            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
+            throw new CustomException(ExceptionCode.POST_AUTHORITY_FORBIDDEN);
         }
     }
 }

@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
         // 예외 유형에 따라 리다이렉션 처리
         if (ex.getExceptionCode() == ExceptionCode.POST_NOT_FOUND) {
             return "redirect:/posts?notExist";
-        } else if(ex.getExceptionCode() == ExceptionCode.USER_FORBIDDEN){
+        } else if(ex.getExceptionCode() == ExceptionCode.POST_AUTHORITY_FORBIDDEN){
             return "redirect:/posts?noPermission";
         }
         else {

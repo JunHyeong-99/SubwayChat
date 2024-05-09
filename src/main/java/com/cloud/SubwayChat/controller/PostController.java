@@ -99,7 +99,6 @@ public class PostController {
         return "redirect:/posts";
     }
 
-
     @PostMapping("/posts/{postId}/comments")
     public String createComment(@RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
