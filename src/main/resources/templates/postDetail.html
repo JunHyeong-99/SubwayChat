@@ -3,53 +3,19 @@
 <head>
   <title>게시글 조회</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-    }
-    h1 {
-      color: #333;
-    }
-    .post {
-      border-bottom: 1px solid #eee;
-      padding-bottom: 20px;
-      margin-bottom: 20px;
-    }
-    .post h2 {
-      color: #007BFF;
-    }
-    .post p {
-      color: #666;
-    }
-    ul.pagination {
-      list-style-type: none;
-      padding: 0;
-    }
-    ul.pagination li {
-      display: inline;
-      margin-right: 5px;
-    }
-    ul.pagination li a {
-      text-decoration: none;
-      color: #007BFF;
-      padding: 5px 10px;
-      border: 1px solid #ddd;
-    }
-    ul.pagination li a:hover {
-      background-color: #eee;
-    }
-    .button {
-      padding: 10px 20px;
-      background-color: #007BFF;
-      color: white;
-      text-decoration: none;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .button:hover {
-      background-color: #0056b3;
-    }
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    h1 { color: #333; }
+    .post { border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 20px; }
+    .post h2 { color: #007BFF; }
+    .post p { color: #666; }
+    ul.pagination { list-style-type: none; padding: 0; }
+    ul.pagination li { display: inline; margin-right: 5px; }
+    ul.pagination li a { text-decoration: none; color: #007BFF; padding: 5px 10px; border: 1px solid #ddd; }
+    ul.pagination li a:hover { background-color: #eee; }
+    .button { padding: 10px 20px; background-color: #007BFF; color: white; text-decoration: none; border: none; border-radius: 5px; cursor: pointer; }
+    .button:hover { background-color: #0056b3; }
+    .editForm { display: none; margin-top: 10px; }
+    .editLink { cursor: pointer; color: #007BFF; }
   </style>
 </head>
 <body>
@@ -60,19 +26,34 @@
   <p>게시 유형: <span th:text="${post.type}"></span></p>
 
   <!-- 댓글 입력 폼 추가 -->
-  <form action="#" th:action="@{/comments}" method="post">
-    <input type="hidden" name="postId" th:value="${post.id}" />
+  <form th:action="@{/posts/{postId}/comments(postId=${post.id})}" method="post">
     <textarea name="content" placeholder="댓글 입력" required></textarea>
     <button type="submit">댓글 등록</button>
   </form>
 
-  <!-- 댓글 리스트 -->
+  <!-- 댓글 리스트 및 수정 폼 -->
   <div th:each="comment : ${post.comments}">
-    <p th:text="${comment.user.nickName + ': ' + comment.content}"></p>
+    <p>
+    <span class="editLink" th:text="${comment.user.nickName + ': ' + comment.content}"
+          th:onclick="'toggleForm(' + ${comment.id} + ');'"></span>
+    </p>
+    <!-- 댓글 수정 폼 -->
+    <form th:id="'commentForm' + ${comment.id}" th:action="@{/posts/{postId}/comments/{id}/update(postId=${post.id}, id=${comment.id})}" method="post" class="editForm">
+      <textarea name="content" th:text="${comment.content}" required></textarea>
+      <button type="submit">수정</button>
+    </form>
   </div>
 </div>
 <a href="/posts" class="button">목록으로 돌아가기</a>
 <!-- Edit Button -->
 <a th:href="@{/posts/update/{id}(id=${post.id})}" class="button">수정</a>
+
+<!-- JavaScript to toggle edit forms -->
+<script>
+  function toggleForm(commentId) {
+    var form = document.getElementById('commentForm' + commentId);
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
 </body>
 </html>

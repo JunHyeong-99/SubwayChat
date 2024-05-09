@@ -87,15 +87,25 @@ public class PostController {
         return "redirect:/posts";
     }
 
-    @PostMapping("/comments")
-    public String createComment(@RequestParam("content") String content,
-                             @RequestParam("postId") Long postId, HttpSession session) {
+    @PostMapping("posts/{postId}/comments")
+    public String createComment(@RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {
             return "redirect:/login";
         }
 
         postService.createComment(content, userId, postId);
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("posts/{postId}/comments/{id}/update")
+    public String updateComment(@PathVariable Long id, @RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        postService.updateComment(content, userId, id);
         return "redirect:/posts/" + postId;
     }
 }
