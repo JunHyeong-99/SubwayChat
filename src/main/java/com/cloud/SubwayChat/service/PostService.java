@@ -62,12 +62,22 @@ public class PostService {
                 () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
         );
 
-        // 권한 없음
-        if(!userId.equals(post.getUser().getId())){
-            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
-        }
+        // 권한 체크
+        checkPostAuthority(userId, post);
 
         post.updatePost(title, content, type);
+    }
+
+    @Transactional
+    public void deletePost(Long postId, Long userId){
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
+        );
+
+        // 권한 체크
+        checkPostAuthority(userId, post);
+
+        postRepository.delete(post);
     }
 
     @Transactional
@@ -103,5 +113,11 @@ public class PostService {
         }
 
         comment.updateComment(content);
+    }
+
+    private void checkPostAuthority(Long userId, Post post){
+        if(!userId.equals(post.getUser().getId())){
+            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
+        }
     }
 }
