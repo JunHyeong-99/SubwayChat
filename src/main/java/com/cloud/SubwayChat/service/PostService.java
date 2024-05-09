@@ -51,7 +51,7 @@ public class PostService {
 
     @Transactional
     public Post findPostById(Long postId){
-        return postRepository.findById(postId).orElseThrow(
+        return postRepository.findByIdWithComment(postId).orElseThrow(
                 () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
         );
     }
@@ -75,20 +75,22 @@ public class PostService {
     @Transactional
     public void createComment(String content, Long userId, Long postId){
         // 존재하지 않는 게시글이면 에러
-        if(!postRepository.existsById(postId)){
-            throw new CustomException(ExceptionCode.POST_NOT_FOUND);
-        }
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
+        );
 
         // 프록시 객체 사용
         User userRef = entityManager.getReference(User.class, userId);
-        Post postRef = entityManager.getReference(Post.class, postId);
 
         Comment comment = Comment.builder()
                 .user(userRef)
-                .post(postRef)
+                .post(post)
                 .content(content)
                 .build();
 
         commentRepository.save(comment);
+
+        // 양방향 메서드
+        post.addComment(comment);
     }
 }

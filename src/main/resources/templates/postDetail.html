@@ -60,7 +60,7 @@
   <p>게시 유형: <span th:text="${post.type}"></span></p>
 
   <!-- 댓글 입력 폼 추가 -->
-  <form action="#" th:action="@{/comments/add}" method="post">
+  <form action="#" th:action="@{/comments}" method="post">
     <input type="hidden" name="postId" th:value="${post.id}" />
     <textarea name="content" placeholder="댓글 입력" required></textarea>
     <button type="submit">댓글 등록</button>
@@ -68,7 +68,7 @@
 
   <!-- 댓글 리스트 -->
   <div th:each="comment : ${post.comments}">
-    <p th:text="${comment.user.name + ': ' + comment.content}"></p>
+    <p th:text="${comment.user.nickName + ': ' + comment.content}"></p>
   </div>
 </div>
 <a href="/posts" class="button">목록으로 돌아가기</a>

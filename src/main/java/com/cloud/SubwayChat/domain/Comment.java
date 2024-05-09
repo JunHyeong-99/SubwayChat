@@ -34,4 +34,8 @@ public class Comment {
         this.post = post;
         this.content = content;
     }
+
+    public void updatePost(Post post){
+        this.post = post;
+    }
 }
