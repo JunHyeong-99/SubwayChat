@@ -12,9 +12,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public String handleCustomException(CustomException ex, RedirectAttributes redirectAttributes) {
-        // 예외 메시지를 Flash 속성으로 추가
-        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+    public String handleCustomException(CustomException ex) {
 
         // 예외 유형에 따라 리다이렉션 처리
         if (ex.getExceptionCode() == ExceptionCode.POST_NOT_FOUND) {
