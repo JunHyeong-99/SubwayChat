@@ -47,17 +47,21 @@ public class PostService {
     }
 
     @Transactional
-    public Post findPostById(Long id){
-        return postRepository.findById(id).orElse(null);
+    public Post findPostById(Long postId){
+        return postRepository.findById(postId).orElseThrow(
+                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
+        );
     }
 
     @Transactional
     public boolean updatePost(Long postId, Long userId, String title, String content, PostType type){
-        Post post = postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
+        );
 
         // 권한 없음
-        if(post == null || !userId.equals(post.getUser().getId())){
-            return true;
+        if(!userId.equals(post.getUser().getId())){
+            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
         }
 
         post.updatePost(title, content, type);
