@@ -57,7 +57,7 @@ public class PostService {
     }
 
     @Transactional
-    public boolean updatePost(Long postId, Long userId, String title, String content, PostType type){
+    public void updatePost(Long postId, Long userId, String title, String content, PostType type){
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
         );
@@ -68,8 +68,6 @@ public class PostService {
         }
 
         post.updatePost(title, content, type);
-
-        return false;
     }
 
     @Transactional
@@ -92,5 +90,18 @@ public class PostService {
 
         // 양방향 메서드
         post.addComment(comment);
+    }
+
+    @Transactional
+    public void updateComment(String content, Long userId, Long commentId){
+        Comment comment =commentRepository.findById(commentId).orElseThrow(
+                () -> new CustomException(ExceptionCode.COMMENT_NOT_FOUND)
+        );
+
+        if(!userId.equals(comment.getUser().getId())){
+            throw new CustomException(ExceptionCode.USER_FORBIDDEN);
+        }
+
+        comment.updateComment(content);
     }
 }

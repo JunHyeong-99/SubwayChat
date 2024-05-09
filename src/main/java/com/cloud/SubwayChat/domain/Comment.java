@@ -38,4 +38,8 @@ public class Comment {
     public void updatePost(Post post){
         this.post = post;
     }
+
+    public void updateComment(String content){
+        this.content = content;
+    }
 }
