@@ -23,7 +23,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 웹 소켓 엔드 포인트 등록, 클라이언트는 이 경로를 사용해서 WebSocket 연결 설정을 한다.
-        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*");
+        registry.addEndpoint("/ws-stomp").setAllowedOriginPatterns("*").withSockJS();
     }
 
 }
