@@ -2,6 +2,7 @@ package com.cloud.SubwayChat.service;
 
 import com.cloud.SubwayChat.controller.dto.ChatRoomDto;
 import com.cloud.SubwayChat.controller.dto.MessageDto;
+import com.cloud.SubwayChat.core.errors.CustomException;
 import com.cloud.SubwayChat.domain.ChatRoom;
 import com.cloud.SubwayChat.domain.Message;
 import com.cloud.SubwayChat.domain.SubwayLine;
@@ -17,10 +18,9 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.cloud.SubwayChat.core.errors.ExceptionCode.CHAT_ROOM_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -37,6 +37,7 @@ public class ChatRoomService {
     private final RedisSubscriber redisSubscriber;
     private static final String Chat_Rooms = "CHAT_ROOM";
     private final RedisTemplate<String, Object> redisTemplate;
+
     private HashOperations<String, String, ChatRoomDto> opsHashMessageRoom; //Hash 자료구조 Key,  새로운 엔트리의 키(Key), 엔트리 속 필드에 저장되는 value 타입
 
     // 2. 채팅방의 대화 메시지 발행을 위한 redis topic(쪽지방) 정보
@@ -75,6 +76,11 @@ public class ChatRoomService {
     public List<ChatRoomDto> getAllChatRoom() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAll();
         return chatRooms.stream().map(ChatRoomDto::toDto).toList();
+    }
+    public ChatRoomDto getChatRoom(String roomId) {
+        return chatRoomRepository.findByRoomId(roomId)
+                .map(ChatRoomDto::toDto)
+                .orElseThrow(() -> new CustomException(CHAT_ROOM_NOT_FOUND));
     }
 
     // redis 채널에서 채팅방 조회
