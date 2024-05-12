@@ -21,6 +21,7 @@ public class ChatController {
     private final ChatService chatService;
 
     // 대화 & 대화 저장
+    // 웹소켓 연결 후 /pub/message로 들어오는 메시지 처리한다
     @MessageMapping("/message")
     public void message(MessageDto messageDto) {
         // 클라이언트의 topic 입장, 채팅을 위해 리스너와 연동
