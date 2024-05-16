@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>게시글 수정</h1>
-<form th:action="@{/posts/update/{id}(id=${post.id})}" th:object="${post}" method="post">
+<form th:action="@{/posts/{id}/update(id=${post.id})}" th:object="${post}" method="post">
   <input type="hidden" name="_method" value="put" />
   <p>제목: <input type="text" th:field="*{title}" /></p>
   <p>내용:

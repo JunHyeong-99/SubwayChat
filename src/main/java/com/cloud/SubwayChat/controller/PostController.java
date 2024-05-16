@@ -1,5 +1,7 @@
 package com.cloud.SubwayChat.controller;
 
+import com.cloud.SubwayChat.core.errors.CustomException;
+import com.cloud.SubwayChat.core.errors.ExceptionCode;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.domain.PostType;
 import com.cloud.SubwayChat.service.PostService;
@@ -17,10 +19,11 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public String createPost(@ModelAttribute Post post, @SessionAttribute("USER_ID") Long userId){
+    public String createPost(@ModelAttribute Post post, HttpSession session){
         // 세션에 USER_ID가 없다면 로그인 페이지로 리다이렉션
+        Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/join";
         }
 
         postService.createPost(post.getTitle(), post.getContent(), post.getType(), userId);
@@ -53,50 +56,68 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public String findPostById(Model model, @PathVariable Long id) {
         Post post = postService.findPostById(id);
-
-        // 존재하지 않은 게시글이면 에러
-        if(post == null){
-            return "redirect:/posts?notExist";
-        }
-
         model.addAttribute("post", post);
 
         return "postDetail";
     }
 
-    @GetMapping("/posts/update/{id}")
-    public String updatePostForm(@PathVariable Long id, @SessionAttribute("USER_ID") Long userId, Model model) {
+    @GetMapping("/posts/{id}/update")
+    public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
+        Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/join";
         }
 
         Post post = postService.findPostById(id);
-
-        // 존재하지 않는 게시글
-        if (post == null){
-            return "redirect:/posts?notExist";
-        }
-        // 권한 없음
-        if(!userId.equals(post.getUser().getId())) {
-            return "redirect:/posts?noPermission";
-        }
-
         model.addAttribute("post", post);
         model.addAttribute("types", PostType.values());
+
         return "updatePost";
     }
 
-    @PostMapping("/posts/update/{id}")
-    public String updatePost(@PathVariable Long id, @ModelAttribute Post post, @SessionAttribute("USER_ID") Long userId) {
+    @PostMapping("/posts/{id}/update")
+    public String updatePost(@PathVariable Long id, @ModelAttribute Post post, HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
         if (userId == null) {
             return "redirect:/login";
         }
 
-        // 권한이 없음 (주소를 통해 바로 수정하려는 시도 방지)
-        if(postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType())){
-            return "redirect:/posts?noPermission";
-        }
+        postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType());
 
         return "redirect:/posts";
+    }
+
+    @PostMapping("/posts/{postId}/delete")
+    public String deletePost(@PathVariable Long postId, HttpSession session){
+        Long userId = (Long) session.getAttribute("USER_ID");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        postService.deletePost(postId, userId);
+
+        return "redirect:/posts";
+    }
+
+    @PostMapping("/posts/{postId}/comments")
+    public String createComment(@RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        postService.createComment(content, userId, postId);
+        return "redirect:/posts/" + postId;
+    }
+
+    @PostMapping("/posts/{postId}/comments/{id}/update")
+    public String updateComment(@PathVariable Long id, @RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
+        Long userId = (Long) session.getAttribute("USER_ID");
+        if (userId == null) {
+            return "redirect:/login";
+        }
+
+        postService.updateComment(content, userId, id);
+        return "redirect:/posts/" + postId;
     }
 }

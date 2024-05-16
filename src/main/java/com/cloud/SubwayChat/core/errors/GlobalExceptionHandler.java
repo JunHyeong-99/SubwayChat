@@ -7,12 +7,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<?> customError(CustomException e) {
-        return new ResponseEntity<>(e.body(), e.status());
+    public String handleCustomException(CustomException ex) {
+
+        // 예외 유형에 따라 리다이렉션 처리
+        if (ex.getExceptionCode() == ExceptionCode.POST_NOT_FOUND) {
+            return "redirect:/posts?notExist";
+        } else if(ex.getExceptionCode() == ExceptionCode.POST_AUTHORITY_FORBIDDEN){
+            return "redirect:/posts?noPermission";
+        }
+        else {
+            return "redirect:/";
+        }
     }
 
     @ExceptionHandler(Exception.class)

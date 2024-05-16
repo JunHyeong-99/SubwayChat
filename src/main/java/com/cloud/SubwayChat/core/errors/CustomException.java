@@ -1,8 +1,10 @@
 package com.cloud.SubwayChat.core.errors;
 
 import com.cloud.SubwayChat.core.ApiUtils;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class CustomException extends RuntimeException{
 
     private ExceptionCode exceptionCode;
