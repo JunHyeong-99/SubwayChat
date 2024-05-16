@@ -1,5 +1,7 @@
 package com.cloud.SubwayChat.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,4 +16,9 @@ public enum SubwayLine {
     GIMHAE_LIGHT_RAIL("부산김해경전철");
 
     private String lineName;
+
+    @JsonValue
+    public String getLineName() {
+        return lineName;
+    }
 }
