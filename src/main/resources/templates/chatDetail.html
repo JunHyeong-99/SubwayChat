@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Websocket ChatRoom</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <link rel="icon" href="data:,">
+</head>
+<body>
+<div class="container" id="app">
+    <div>
+        <h2 id="roomName"></h2>
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <label class="input-group-text">내용</label>
+        </div>
+        <input type="text" class="form-control" id="message" onkeypress="sendMessage(event)">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" onclick="sendMessage()">보내기</button>
+        </div>
+    </div>
+    <ul class="list-group" id="messageList">
+    </ul>
+    <div></div>
+</div>
+<!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+<script src="/webjars/stomp-websocket/2.3.3-1/stomp.min.js"></script>
+<script>
+    // websocket & stomp initialize
+    var sock = new SockJS("/ws-stomp");
+    var ws = Stomp.over(sock);
+    var reconnect = 0;
+    // onload event
+    document.addEventListener('DOMContentLoaded', function() {
+        connect();
+        var roomId = localStorage.getItem('wschat.roomId');
+        var sender = localStorage.getItem('wschat.sender');
+        var roomName = document.getElementById('roomName');
+        if (roomId && sender) {
+            axios.get('/chat/room/' + roomId)
+                .then(response => {
+                    roomName.textContent = response.data.subwayLine;
+                })
+                .catch(error => {
+                    console.error('Error fetching room:', error);
+                });
+        }
+    });
+
+    function connect() {
+        // pub/sub event
+        ws.connect({}, function(frame) {
+            var roomId = localStorage.getItem('wschat.roomId');
+            var sender = localStorage.getItem('wschat.sender');
+            console.log(roomId)
+            ws.subscribe("/sub/chat/room/" + roomId, function(message) {
+                var recv = JSON.parse(message.body);
+                recvMessage(recv);
+            });
+            ws.send("/pub/message", {}, JSON.stringify({message:sender+'님이 입장했습니다.', roomId:roomId, sender:'[알림]'}));
+        }, function(error) {
+            if (reconnect++ <= 5) {
+                setTimeout(function() {
+                    console.log("connection reconnect");
+                    sock = new SockJS("/ws-stomp");
+                    ws = Stomp.over(sock);
+                    connect();
+                }, 10 * 1000);
+            }
+        });
+    }
+
+    function sendMessage(event) {
+        if (event && event.key !== 'Enter') {
+            return;
+        }
+        var roomId = localStorage.getItem('wschat.roomId');
+        var sender = localStorage.getItem('wschat.sender');
+        var message = document.getElementById('message').value;
+        ws.send("/pub/message", {}, JSON.stringify({roomId:roomId, sender:sender, message:message}));
+        document.getElementById('message').value = '';
+    }
+
+    function recvMessage(recv) {
+        var messageList = document.getElementById('messageList');
+        var listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        listItem.textContent = recv.sender + ' - ' + recv.message;
+        messageList.insertBefore(listItem, messageList.firstChild);
+    }
+</script>
+</body>
+</html>
