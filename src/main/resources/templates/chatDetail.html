@@ -2,28 +2,18 @@
 <html lang="en">
 <head>
     <title>Websocket ChatRoom</title>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <link rel="icon" href="data:,">
 </head>
 <body>
-<div class="container" id="app">
-    <div>
-        <h2 id="roomName"></h2>
-    </div>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <label class="input-group-text">내용</label>
-        </div>
-        <input type="text" class="form-control" id="message" onkeypress="sendMessage(event)">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="button" onclick="sendMessage()">보내기</button>
-        </div>
-    </div>
-    <ul class="list-group" id="messageList">
-    </ul>
-    <div></div>
-</div>
+
+<h2 id="roomName"></h2>
+
+<label>내용</label>
+
+<input type="text" id="message" onkeypress="sendMessage(event)">
+<button type="button" onclick="sendMessage()">보내기</button>
+<ul id="messageList">
+</ul>
 <!-- JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
@@ -87,7 +77,6 @@
     function recvMessage(recv) {
         var messageList = document.getElementById('messageList');
         var listItem = document.createElement('li');
-        listItem.className = 'list-group-item';
         listItem.textContent = recv.sender + ' - ' + recv.message;
         messageList.insertBefore(listItem, messageList.firstChild);
     }
