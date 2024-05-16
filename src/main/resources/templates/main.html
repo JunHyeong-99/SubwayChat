@@ -5,15 +5,9 @@
     <title>Websocket Chat</title>
 </head>
 <body onload="findAllRoom()">
-<div class="container" id="app" v-cloak>
-    <div class="input-group">
-        <div class="input-group-prepend">
-            <label class="input-group-text">채팅방리스트</label>
-        </div>
-    </div>
-    <ul class="list-group" id="roomList">
-    </ul>
-</div>
+<label>채팅방리스트</label>
+<ul id="roomList">
+</ul>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
@@ -24,8 +18,6 @@
                 roomList.innerHTML = ''; // Clear previous items
                 response.data.forEach(room => {
                     const listItem = document.createElement('li');
-                    listItem.className = 'list-group-item list-group-item-action';
-                    console.log(room)
                     listItem.textContent = room.subwayLine;
                     listItem.addEventListener('click', function() {
                         enterRoom(room.roomId);
@@ -34,7 +26,7 @@
                 });
             })
             .catch(error => {
-                console.error('Error fetching room list:', error);
+                console.error('chatRoom load fail:', error);
             });
     }
 
