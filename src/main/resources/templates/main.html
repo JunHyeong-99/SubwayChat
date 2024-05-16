@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Chat</title>
+</head>
+<body onload="findAllRoom()">
+<div class="container" id="app" v-cloak>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <label class="input-group-text">채팅방리스트</label>
+        </div>
+    </div>
+    <ul class="list-group" id="roomList">
+    </ul>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    function findAllRoom() {
+        axios.get('/chat/rooms')
+            .then(response => {
+                const roomList = document.getElementById('roomList');
+                roomList.innerHTML = ''; // Clear previous items
+                response.data.forEach(room => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item list-group-item-action';
+                    console.log(room)
+                    listItem.textContent = room.subwayLine;
+                    listItem.addEventListener('click', function() {
+                        enterRoom(room.roomId);
+                    });
+                    roomList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching room list:', error);
+            });
+    }
+
+    function enterRoom(roomId) {
+        const sender = prompt('대화명을 입력해 주세요.');
+        if (sender !== null && sender.trim() !== '') {
+            localStorage.setItem('wschat.sender', sender);
+            localStorage.setItem('wschat.roomId', roomId);
+            location.href = '/chat/room/enter/' + roomId;
+        }
+    }
+
+    // Call findAllRoom after DOMContentLoaded event
+</script>
+</body>
+</html>
