@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StartApplicationListener implements ApplicationListener<ContextRefreshedEvent> {
     private final ChatRoomService chatRoomService;
-
+    // 스프링 부트가 로드될 때 채팅방 자동생성
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         chatRoomService.createRoom();

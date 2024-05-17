@@ -22,9 +22,6 @@ public class PostController {
     public String createPost(@ModelAttribute Post post, HttpSession session){
         // 세션에 USER_ID가 없다면 로그인 페이지로 리다이렉션
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/join";
-        }
 
         postService.createPost(post.getTitle(), post.getContent(), post.getType(), userId);
 
@@ -64,9 +61,6 @@ public class PostController {
     @GetMapping("/posts/{id}/update")
     public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/join";
-        }
 
         Post post = postService.findPostById(id);
         model.addAttribute("post", post);
@@ -78,9 +72,6 @@ public class PostController {
     @PostMapping("/posts/{id}/update")
     public String updatePost(@PathVariable Long id, @ModelAttribute Post post, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/login";
-        }
 
         postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType());
 
@@ -90,9 +81,6 @@ public class PostController {
     @PostMapping("/posts/{postId}/delete")
     public String deletePost(@PathVariable Long postId, HttpSession session){
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/login";
-        }
 
         postService.deletePost(postId, userId);
 
@@ -102,9 +90,6 @@ public class PostController {
     @PostMapping("/posts/{postId}/comments")
     public String createComment(@RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/login";
-        }
 
         postService.createComment(content, userId, postId);
         return "redirect:/posts/" + postId;
@@ -113,9 +98,6 @@ public class PostController {
     @PostMapping("/posts/{postId}/comments/{id}/update")
     public String updateComment(@PathVariable Long id, @RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-        if (userId == null) {
-            return "redirect:/login";
-        }
 
         postService.updateComment(content, userId, id);
         return "redirect:/posts/" + postId;
