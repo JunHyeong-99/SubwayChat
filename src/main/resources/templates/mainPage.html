@@ -10,7 +10,7 @@
 </ul>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
+<script  th:inline="javascript">
     function findAllRoom() {
         axios.get('/chat/rooms')
             .then(response => {
@@ -31,12 +31,10 @@
     }
 
     function enterRoom(roomId) {
-        const sender = prompt('대화명을 입력해 주세요.');
-        if (sender !== null && sender.trim() !== '') {
-            localStorage.setItem('sender', sender);
-            localStorage.setItem('roomId', roomId);
-            location.href = '/chat/room/enter/' + roomId;
-        }
+        var sender = [[${nickName}]];
+        localStorage.setItem('sender', sender);
+        localStorage.setItem('roomId', roomId);
+        location.href = '/chat/room/enter/' + roomId;
     }
 
 </script>
