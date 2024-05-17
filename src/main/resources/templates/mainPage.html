@@ -33,13 +33,12 @@
     function enterRoom(roomId) {
         const sender = prompt('대화명을 입력해 주세요.');
         if (sender !== null && sender.trim() !== '') {
-            localStorage.setItem('wschat.sender', sender);
-            localStorage.setItem('wschat.roomId', roomId);
+            localStorage.setItem('sender', sender);
+            localStorage.setItem('roomId', roomId);
             location.href = '/chat/room/enter/' + roomId;
         }
     }
 
-    // Call findAllRoom after DOMContentLoaded event
 </script>
 </body>
 </html>

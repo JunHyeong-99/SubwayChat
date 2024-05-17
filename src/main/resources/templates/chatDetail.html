@@ -26,8 +26,8 @@
     // onload event
     document.addEventListener('DOMContentLoaded', function() {
         connect();
-        var roomId = localStorage.getItem('wschat.roomId');
-        var sender = localStorage.getItem('wschat.sender');
+        var roomId = localStorage.getItem('roomId');
+        var sender = localStorage.getItem('sender');
         var roomName = document.getElementById('roomName');
         if (roomId && sender) {
             axios.get('/chat/room/' + roomId)
@@ -43,8 +43,8 @@
     function connect() {
         // pub/sub event
         ws.connect({}, function(frame) {
-            var roomId = localStorage.getItem('wschat.roomId');
-            var sender = localStorage.getItem('wschat.sender');
+            var roomId = localStorage.getItem('roomId');
+            var sender = localStorage.getItem('sender');
             console.log(roomId)
             ws.subscribe("/sub/chat/room/" + roomId, function(message) {
                 var recv = JSON.parse(message.body);
@@ -67,8 +67,8 @@
         if (event && event.key !== 'Enter') {
             return;
         }
-        var roomId = localStorage.getItem('wschat.roomId');
-        var sender = localStorage.getItem('wschat.sender');
+        var roomId = localStorage.getItem('roomId');
+        var sender = localStorage.getItem('sender');
         var message = document.getElementById('message').value;
         ws.send("/pub/message", {}, JSON.stringify({roomId:roomId, sender:sender, message:message}));
         document.getElementById('message').value = '';

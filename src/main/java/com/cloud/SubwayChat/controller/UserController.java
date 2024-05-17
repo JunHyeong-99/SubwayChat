@@ -25,14 +25,13 @@ public class UserController {
     @GetMapping("/")
     public String createUserForm(Model model) {
         model.addAttribute("user", new User());
-        model.addAttribute("lines", SubwayLine.values());
 
         return "createUser";
     }
 
     @PostMapping("/join")
     public String join(@ModelAttribute User user, HttpSession session) {
-        userService.join(user.getNickName(), user.getLine(), session);
+        userService.join(user.getNickName(), session);
 
         return "mainPage";
     }

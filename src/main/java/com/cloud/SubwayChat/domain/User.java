@@ -16,12 +16,9 @@ public class User extends TimeStamp {
     @Column
     private String nickName;
 
-    @Column
-    private SubwayLine line;
 
     @Builder
-    public User(String nickName, SubwayLine line) {
+    public User(String nickName) {
         this.nickName = nickName;
-        this.line = line;
     }
 }

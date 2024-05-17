@@ -16,10 +16,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User join(String nickName, SubwayLine line, HttpSession session){
+    public User join(String nickName, HttpSession session){
         User user = User.builder()
                 .nickName(nickName)
-                .line(line)
                 .build();
 
         userRepository.save(user);
