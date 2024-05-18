@@ -9,11 +9,12 @@
 <ul id="roomList">
 </ul>
 
+
 <h1>게시글 목록</h1>
 <a href="/posts/new" class="button">게시글 생성</a>
 <div th:each="post : ${posts}" class="post">
     <h2>
-        <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+        <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
     </h2>
 </div>
 
@@ -33,7 +34,6 @@
 <script th:if="${param.notExist}">
     alert('게시글이 존재하지 않습니다.');
 </script>
-
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script  th:inline="javascript">
