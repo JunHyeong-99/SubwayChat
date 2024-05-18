@@ -1,6 +1,7 @@
 package com.cloud.SubwayChat.controller;
 
 import com.cloud.SubwayChat.controller.dto.ChatRoomDto;
+import com.cloud.SubwayChat.controller.dto.PostsDto;
 import com.cloud.SubwayChat.controller.dto.UserDto;
 import com.cloud.SubwayChat.domain.Post;
 import com.cloud.SubwayChat.domain.SubwayLine;
@@ -49,12 +50,12 @@ public class UserController {
     public String home(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page) {
         UserDto userDto = userService.findUser((Long) session.getAttribute("USER_ID"));
         model.addAttribute("nickName", userDto.getNickName());
-        Page<Post> pagePosts = postService.findPostList(page);
+        PostsDto pagePosts = postService.findPostList(page);
 
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pagePosts.getTotalPages());
-        model.addAttribute("totalItems", pagePosts.getTotalElements());
-        model.addAttribute("posts", pagePosts.getContent());
+        model.addAttribute("totalItems", pagePosts.getTotalItems());
+        model.addAttribute("posts", pagePosts.getPosts());
         return "mainPage";
     }
 }

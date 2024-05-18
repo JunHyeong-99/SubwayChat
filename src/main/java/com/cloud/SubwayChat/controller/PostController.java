@@ -1,5 +1,7 @@
 package com.cloud.SubwayChat.controller;
 
+import com.cloud.SubwayChat.controller.dto.PostDto;
+import com.cloud.SubwayChat.controller.dto.PostsDto;
 import com.cloud.SubwayChat.core.errors.CustomException;
 import com.cloud.SubwayChat.core.errors.ExceptionCode;
 import com.cloud.SubwayChat.domain.Post;
@@ -25,7 +27,7 @@ public class PostController {
 
         postService.createPost(post.getTitle(), post.getContent(), post.getType(), userId);
 
-        return "redirect:/posts";
+        return "redirect:/home";
     }
 
     // 게시글 작성 폼으로 이동하기 위해 사용
@@ -39,32 +41,26 @@ public class PostController {
 
     // 게시글 목록 조회
     @GetMapping("/posts")
-    public String findPostList(Model model, @RequestParam(defaultValue = "0") int page) {
-        Page<Post> pagePosts = postService.findPostList(page);
+    @ResponseBody
+    public PostsDto findPostList(Model model, @RequestParam(defaultValue = "0") int page) {
 
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", pagePosts.getTotalPages());
-        model.addAttribute("totalItems", pagePosts.getTotalElements());
-        model.addAttribute("posts", pagePosts.getContent());
-
-        return "postsList";
+        return postService.findPostList(page);
     }
 
     @GetMapping("/posts/{id}")
     public String findPostById(Model model, @PathVariable Long id) {
-        Post post = postService.findPostById(id);
-        model.addAttribute("post", post);
+        PostDto.Detail postDetail = postService.findPostDetailById(id);
 
+        model.addAttribute("post", postDetail);
         return "postDetail";
     }
 
     @GetMapping("/posts/{id}/update")
     public String updatePostForm(@PathVariable Long id, HttpSession session, Model model) {
-        Long userId = (Long) session.getAttribute("USER_ID");
 
-        Post post = postService.findPostById(id);
-        model.addAttribute("post", post);
-        model.addAttribute("types", PostType.values());
+        PostDto.Detail postDetail = postService.findPostDetailById(id);
+        model.addAttribute("post", postDetail);
+        model.addAttribute("types", postDetail.getType());
 
         return "updatePost";
     }
@@ -75,7 +71,7 @@ public class PostController {
 
         postService.updatePost(id, userId, post.getTitle(), post.getContent(), post.getType());
 
-        return "redirect:/posts";
+        return "redirect:/home";
     }
 
     @PostMapping("/posts/{postId}/delete")
@@ -90,7 +86,6 @@ public class PostController {
     @PostMapping("/posts/{postId}/comments")
     public String createComment(@RequestParam("content") String content, @PathVariable Long postId, HttpSession session) {
         Long userId = (Long) session.getAttribute("USER_ID");
-
         postService.createComment(content, userId, postId);
         return "redirect:/posts/" + postId;
     }

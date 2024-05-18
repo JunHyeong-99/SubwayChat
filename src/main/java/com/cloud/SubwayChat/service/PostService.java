@@ -1,5 +1,7 @@
 package com.cloud.SubwayChat.service;
 
+import com.cloud.SubwayChat.controller.dto.PostDto;
+import com.cloud.SubwayChat.controller.dto.PostsDto;
 import com.cloud.SubwayChat.core.errors.CustomException;
 import com.cloud.SubwayChat.core.errors.ExceptionCode;
 import com.cloud.SubwayChat.domain.Comment;
@@ -43,17 +45,17 @@ public class PostService {
     }
 
     @Transactional
-    public Page<Post> findPostList(int pageNo){
+    public PostsDto findPostList(int pageNo){
         Pageable pageable = PageRequest.of(pageNo, 10);
-
-        return postRepository.findAll(pageable);
+        Page<Post> postsPage = postRepository.findAll(pageable);
+        return PostsDto.toDto(postsPage, pageNo);
     }
 
     @Transactional
-    public Post findPostById(Long postId){
-        return postRepository.findByIdWithComment(postId).orElseThrow(
+    public PostDto.Detail findPostDetailById(Long postId){
+        return PostDto.Detail.toDto(postRepository.findByIdWithComment(postId).orElseThrow(
                 () -> new CustomException(ExceptionCode.POST_NOT_FOUND)
-        );
+        ));
     }
 
     @Transactional
