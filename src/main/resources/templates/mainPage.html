@@ -12,19 +12,21 @@
 
 <h1>게시글 목록</h1>
 <a href="/posts/new" class="button">게시글 생성</a>
-<div th:each="post : ${posts}" class="post">
-    <h2>
-        <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
-    </h2>
+<div id="posts-container">
+    <div th:each="post : ${posts}" class="post">
+        <h2>
+            <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+        </h2>
+    </div>
 </div>
-
 <div>
     <ul class="pagination">
         <li th:if="${totalPages > 0}" th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-            <a th:href="@{/posts(page=${i})}" th:text="${i + 1}">Page number</a>
+            <a href="javascript:void(0);" th:attr="data-page=${i}" th:text="${i + 1}" class="page-link">Page number</a>
         </li>
     </ul>
 </div>
+
 
 <!-- 에러 처리 -->
 <script th:if="${param.noPermission}">
@@ -37,6 +39,74 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script  th:inline="javascript">
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pagination link click event
+        document.querySelectorAll('.page-link').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                const page = event.target.getAttribute('data-page');
+                fetchPosts(page);
+            });
+        });
+
+        function fetchPosts(page) {
+            fetch(`/posts?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    reloadPosts(data.posts);
+                    updatePagination(data.totalPages, page);
+                })
+                .catch(error => console.error('Error fetching posts:', error));
+        }
+
+        function reloadPosts(posts) {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = ''; // Clear current posts
+
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+
+                const postTitle = document.createElement('h2');
+                const postLink = document.createElement('a');
+                postLink.href = `/posts/${post.postId}`;
+                postLink.textContent = post.title;
+
+                postTitle.appendChild(postLink);
+                postDiv.appendChild(postTitle);
+                postsContainer.appendChild(postDiv);
+            });
+        }
+
+        function updatePagination(totalPages, currentPage) {
+            const paginationContainer = document.querySelector('.pagination');
+            paginationContainer.innerHTML = ''; // Clear current pagination
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageItem = document.createElement('li');
+                const pageLink = document.createElement('a');
+                pageLink.href = 'javascript:void(0);';
+                pageLink.textContent = i + 1;
+                pageLink.setAttribute('data-page', i);
+                pageLink.classList.add('page-link');
+                if (i == currentPage) {
+                    pageLink.classList.add('active');
+                }
+                pageLink.addEventListener('click', function(event) {
+                    fetchPosts(i);
+                });
+
+                pageItem.appendChild(pageLink);
+                paginationContainer.appendChild(pageItem);
+            }
+        }
+    });
+
     function findAllRoom() {
         axios.get('/chat/rooms')
             .then(response => {
