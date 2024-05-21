@@ -24,7 +24,7 @@ public class ChatService {
         Message message = new Message(messageDto.getSender(), messageDto.getRoomId(), messageDto.getMessage());
         messageRepository.save(message);
         // 메시지 직렬화 하기 redis에 저장하기 위해 직렬화
-        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(Message.class));
+        redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDto.class));
         // 직렬화한 메시지 redis에 저장 roomID에 해당하는 List에 메시지 내용 저장
         redisTemplateMessage.opsForList().rightPush(messageDto.getRoomId(), messageDto);
         // 메시지 만료 기간 15분으로 설정

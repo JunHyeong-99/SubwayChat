@@ -90,24 +90,20 @@ public class ChatRoomService {
 
     public List<MessageDto> loadMessage(String roomId) {
         List<MessageDto> messageList = new ArrayList<>();
-
         // Redis 에서 해당 채팅방의 메시지 100개 불러오기
         List<MessageDto> redisMessageList = redisTemplateMessage.opsForList().range(roomId, 0, 99);
-
         // Redis 에서 가져온 메시지가 없다면, DB 에서 메시지 100개 가져오기
         if (redisMessageList == null || redisMessageList.isEmpty()) {
             List<Message> dbMessageList = messageRepository.findTop100ByRoomIdOrderBySentTimeAsc(roomId);
-
             for (Message message : dbMessageList) { // DB에서 가져온 메시지를 Redis에 저장
                 MessageDto messageDto = new MessageDto(message);
                 messageList.add(messageDto);
-                redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(Message.class));
+                redisTemplateMessage.setValueSerializer(new Jackson2JsonRedisSerializer<>(MessageDto.class));
                 redisTemplateMessage.opsForList().rightPush(roomId, messageDto);
             }
         } else {
             messageList.addAll(redisMessageList);
         }
-
         return messageList;
     }
 }
