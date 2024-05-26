@@ -24,7 +24,7 @@ public class ChatRoomController {
 
     @GetMapping("/room/enter/{roomId}")
     public String roomEnter(@PathVariable String roomId) {
-        return "/chatDetail";
+        return "chatDetail";
     }
 
     @GetMapping("/room/{roomId}")

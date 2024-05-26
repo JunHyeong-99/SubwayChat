@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  app:
+    image: hoyaii/subwaychat
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/SubwayChat?serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 0623
+    depends_on:
+      - db
+      - redis
+    networks:
+      - mynetwork
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 0623
+      MYSQL_DATABASE: SubwayChat
+      MYSQL_PASSWORD: 0623
+    networks:
+      - mynetwork
+
+  redis:
+    image: redis:7
+    ports:
+      - "6979:6379"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
