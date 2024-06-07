@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>게시글 조회</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    header {
+      background-color: #007bff;
+      color: #fff;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    header .brand {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .post {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .post h2 {
+      color: #007bff;
+    }
+
+    .post p {
+      color: #666;
+    }
+
+    ul.pagination {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    ul.pagination li {
+      display: inline;
+      margin-right: 5px;
+    }
+
+    ul.pagination li a {
+      text-decoration: none;
+      color: #007bff;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+    }
+
+    ul.pagination li a:hover {
+      background-color: #eee;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-right: 10px;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    .editForm {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .editLink {
+      cursor: pointer;
+      color: #007bff;
+    }
+
+    .comment {
+      border: 1px solid #eee;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .comment p {
+      margin: 5px 0;
+    }
+
+    .commentContent {
+      color: #333;
+    }
+
+    .commentNickname {
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    textarea {
+      width: 97%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      font-size: 16px;
+      resize: vertical; /
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">SubwayChat</div>
+</header>
+<div class="container">
+  <h1>게시글 세부 정보</h1>
+  <div class="post">
+    <h2 th:text="'제목 : ' + ${post.title}">제목</h2>
+    <p th:text="${post.content}">내용</p>
+    <p>게시 유형: <span th:text="${post.type.value}"></span></p>
+
+    <!-- 댓글 입력 폼 추가 -->
+    <form th:action="@{/posts/{postId}/comments(postId=${post.postId})}" method="post">
+      <textarea name="content" placeholder="댓글 입력" required></textarea>
+      <button type="submit" class="button">댓글 등록</button>
+    </form>
+
+    <!-- 댓글 리스트 및 수정 폼 -->
+    <div th:each="comment : ${post.comments}">
+      <p>
+          <span class="editLink" th:text="${comment.nickName + ': ' + comment.content}"
+                th:onclick="'toggleForm(' + ${comment.id} + ');'"></span>
+      </p>
+      <!-- 댓글 수정 폼 -->
+      <form th:id="'commentForm' + ${comment.id}" th:action="@{/posts/{postId}/comments/{id}/update(postId=${post.postId}, id=${comment.id})}" method="post" class="editForm">
+        <textarea name="content" th:text="${comment.content}" required></textarea>
+        <button type="submit" class="button">수정</button>
+      </form>
+    </div>
+  </div>
+  <a href="/home" class="button">목록으로 돌아가기</a>
+  <a th:href="@{/posts/{id}/update(id=${post.postId})}" class="button">수정</a>
+</div>
+
+<!-- JavaScript to toggle edit forms -->
+<script>
+  function toggleForm(commentId) {
+    var form = document.getElementById('commentForm' + commentId);
+    form.style.display = form.style.display === 'block' ? 'none' : 'block';
+  }
+</script>
+</body>
+</html>
