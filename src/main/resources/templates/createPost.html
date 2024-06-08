@@ -1,21 +1,129 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="UTF-8">
   <title>게시글 작성</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+
+    header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header .brand {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #007bff;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    button,
+    .main-button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+      font-size: 1em;
+      margin-left: 10px;
+    }
+
+    button:hover,
+    .main-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-<h1>게시글 작성</h1>
-<form th:action="@{/posts}" th:object="${post}" method="post">
-  <p>제목: <input type="text" th:field="*{title}" /></p>
-  <p>내용:
-    <textarea th:field="*{content}"></textarea>
-  </p>
-  <p>유형:
-    <select th:field="*{type}">
-      <option th:each="type : ${types}" th:value="${type}" th:text="${type.value}"></option>
-    </select>
-  </p>
-  <p><button type="submit">제출</button></p>
-</form>
+<header>
+  <div class="brand">SubwayChat</div>
+</header>
+<div class="container">
+  <h1>게시글 작성</h1>
+  <form th:action="@{/posts}" th:object="${post}" method="post">
+    <p>
+      <label for="title">제목</label>
+      <input type="text" id="title" th:field="*{title}" />
+    </p>
+    <p>
+      <label for="content">내용</label>
+      <textarea id="content" th:field="*{content}"></textarea>
+    </p>
+    <p>
+      <label for="type">유형</label>
+      <select id="type" th:field="*{type}">
+        <option th:each="type : ${types}" th:value="${type}" th:text="${type.value}"></option>
+      </select>
+    </p>
+    <div class="buttons">
+      <button type="submit">등록</button>
+      <button onClick="history.back();">나가기</button>
+    </div>
+  </form>
+</div>
 </body>
 </html>

@@ -14,7 +14,7 @@ import java.util.List;
 @Table(name = "post_tb")
 @NoArgsConstructor
 @Getter @Setter
-public class Post {
+public class Post extends TimeStamp{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

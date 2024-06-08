@@ -1,23 +1,148 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <meta charset="utf-8">
   <title>게시글 수정</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header .brand {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background-color: white;
+      padding: 20px;
+      margin: 50px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    p {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #007bff;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 1em;
+    }
+
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1em;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .back-button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-<h1>게시글 수정</h1>
-<form th:action="@{/posts/{id}/update(id=${post.postId})}" th:object="${post}" method="post">
-  <input type="hidden" name="_method" value="put" />
-  <p>제목: <input type="text" th:field="*{title}" /></p>
-  <p>내용:
-    <textarea th:field="*{content}"></textarea>
-  </p>
-  <p>유형:
-    <select th:field="*{type}">
-      <option th:each="type : ${types}" th:value="${type}" th:text="${type.value}"></option>
-    </select>
-  </p>
-  <p><button type="submit">수정 완료</button></p>
-</form>
-<a href="/posts" class="button">목록으로 돌아가기</a>
+<header>
+  <div class="brand">SubwayChat</div>
+</header>
+<div class="container">
+  <h1>게시글 수정</h1>
+  <form th:action="@{/posts/{id}/update(id=${post.postId})}" th:object="${post}" method="post">
+    <input type="hidden" name="_method" value="put" />
+    <p>
+      <label for="title">제목</label>
+      <input type="text" id="title" th:field="*{title}" />
+    </p>
+    <p>
+      <label for="content">내용</label>
+      <textarea id="content" th:field="*{content}"></textarea>
+    </p>
+    <p>
+      <label for="type">유형</label>
+      <select id="type" th:field="*{type}">
+        <option th:each="type : ${types}" th:value="${type}" th:text="${type.value}"></option>
+      </select>
+    </p>
+    <div class="button-container">
+      <button type="submit">수정 완료</button>
+      <a href="/home" class="back-button">목록으로 돌아가기</a>
+    </div>
+  </form>
+</div>
 </body>
 </html>
