@@ -189,6 +189,9 @@ http://localhost:8080
 http://20.39.188.176:8080
 ```
 
+## 시연 영상
+
+![Uploading SubwayChat.gif…]()
 
 ## SubwayChat 활용 방안
 
