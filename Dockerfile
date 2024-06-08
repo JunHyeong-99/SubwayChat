@@ -20,7 +20,7 @@ RUN gradle clean build -x test
 FROM openjdk:17-jdk-slim AS runtime
 
 # 빌드된 JAR 파일을 복사
-COPY --from=builder /project/build/libs/SubwayChat-0.0.1-SNAPSHOT.jar /app/SubwayChat-0.0.1-SNAPSHOT.jar
+COPY --from=builder /project/build/libs/demo-0.0.1-SNAPSHOT.jar /app/demo-0.0.1-SNAPSHOT.jar
 
 # 빌드 결과 JAR 파일을 실행
 CMD ["java", "-jar", "/app/demo-0.0.1-SNAPSHOT.jar"]
