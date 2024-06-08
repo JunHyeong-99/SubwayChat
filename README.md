@@ -191,7 +191,10 @@ http://20.39.188.176:8080
 
 ## 시연 영상
 
-![Uploading SubwayChat.gif…]()
+
+
+https://github.com/pnuCloud/SubwayChat/assets/64734115/268014ca-9f52-49a8-b5a3-88a9af28eafd
+
 
 ## SubwayChat 활용 방안
 
