@@ -3,6 +3,16 @@
 <img width="350" alt="스크린샷 2024-06-07 오전 10 32 11" src="https://github.com/pnuCloud/SubwayChat/assets/131665728/1e2ac786-3a76-4969-9f0a-4220dc901ec0">
 </p>
 
+<br/>
+
+## 프로젝트 멤버
+| 이름 | 담당 파트 |
+|------|-----------|
+| [이한홍](https://github.com/hoyaii) | 게시판 API 개발, 도커를 사용해서 클라우드에 배포 및 HA 구성 담당. 그리고 제안서 및 중간 보고서 작성. |
+| [박준형](https://github.com/JunHyeong-99) | Redis 를 사용한 채팅 API 개발. 그리고 최종 보고서 작성. |
+| [김민종](https://github.com/minjong0105) | Thymeleaf 를 사용한 화면 개발 담당. 그리고 PPT 와 시연 영상 제작. |
+
+<br/>
 
 ## 프로젝트 소개
 SubwayChat은 부산 지하철 각 호선별로 마련된 익명 채팅방을 통해 정보 공유와 일상 대화를 즐길 수 있는 서비스입니다.
@@ -10,11 +20,6 @@ SubwayChat은 부산 지하철 각 호선별로 마련된 익명 채팅방을 �
 
 (배포 주소: http://20.39.188.176:8080)
 <br/>
-<br/>
-<br/>
-
-## 아키텍쳐 구조
-<img width="750" alt="스크린샷 2024-06-07 오전 9 37 38" src="https://github.com/pnuCloud/SubwayChat/assets/131665728/5ca4eb11-1802-46cc-a31c-3b7f34608683">
 <br/>
 <br/>
 
@@ -90,6 +95,11 @@ Sentinel 시스템에서 중요한 결정을 내릴 때, 예를 들어 **Master 
 
 <br/>
 
+## 아키텍쳐 구조
+<img width="750" alt="스크린샷 2024-06-07 오전 9 37 38" src="https://github.com/pnuCloud/SubwayChat/assets/131665728/5ca4eb11-1802-46cc-a31c-3b7f34608683">
+<br/>
+<br/>
+
 ## ERD
 
 ![image](https://github.com/pnuCloud/SubwayChat/assets/64734115/c4ea86ba-7a3b-4b42-aaa1-a85efd1888c9)
@@ -112,7 +122,7 @@ CPU 사용률이 70%를 초과할 경우 가상 머신 인스턴스를 하나 �
 <br/>
 <br/>
 <br/>
-<img width="1500" alt="스크린샷 2024-06-07 오전 10 07 49" src="https://github.com/pnuCloud/SubwayChat/assets/131665728/b7da0495-cd6c-4fd7-bf19-c6d9f802c907">
+<img width="1500" alt="스크린샷 2024-06-07 오전 10 07 49" src="https://github.com/pnuCloud/SubwayChat/assets/131665728/b7da0495-cd6c-4fd7-bf19-c6d9f802c907">
 
 <br/>
 <br/>
@@ -232,13 +242,4 @@ SubwayChat은 부산 지하철 호선별 익명 채팅 서비스로, 사용자�
 
 - **비상 상황 네트워크**
   - 자연재해나 긴급 상황 발생 시, 지역 커뮤니티가 서로 도움을 요청하고 지원할 수 있는 통신 채널로 활용될 수 있습니다.
-
-<br/>
-
-## 프로젝트 멤버
-| 이름 | 담당 파트 |
-|------|-----------|
-| [이한홍](https://github.com/hoyaii) | 게시판 API 개발, 도커를 사용해서 클라우드에 배포 및 HA 구성 담당. 그리고 제안서 및 중간 보고서 작성. |
-| [박준형](https://github.com/JunHyeong-99) | Redis 를 사용한 채팅 API 개발. 그리고 최종 보고서 작성. |
-| [김민종](https://github.com/minjong0105) | Thymeleaf 를 사용한 화면 개발 담당. 그리고 PPT 와 시연 영상 제작. |
 
