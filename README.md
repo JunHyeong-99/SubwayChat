@@ -135,7 +135,7 @@ CPU 사용률이 70%를 초과할 경우 가상 머신 인스턴스를 하나 �
 프로젝트를 시작하려면 먼저 GitHub에서 프로젝트의 저장소를 로컬 컴퓨터로 복제합니다. 다음 명령어를 사용하여 저장소를 복제할 수 있습니다:
 ```
 git clone https://github.com/pnuCloud/SubwayChat.git
-cd SubwayChat
+cd SubwayChat/src/WAS
 ```
 
 2. 데이터베이스 설정
@@ -171,7 +171,7 @@ http://localhost:8080
 1. MySQL, Redis 실행
 우선, Docker compose를 사용해서 MySQL과 Redis를 실행시킵니다.
 ```
-cd SubwayChat
+cd SubwayChat/src/WAS
 docker-compose up -d
 ```
 
