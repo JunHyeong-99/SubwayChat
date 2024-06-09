@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>게시글 목록</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      width: 100%;
+      padding: 20px 0;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    header .brand {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background-color: white;
+      padding: 20px;
+      margin: 50px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #007bff;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .post {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+    }
+
+    .post h2 {
+      color: #007bff;
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .post p {
+      color: #666;
+    }
+
+    ul.pagination {
+      list-style-type: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    ul.pagination li {
+      display: inline;
+      margin-right: 5px;
+    }
+
+    ul.pagination li a {
+      text-decoration: none;
+      color: #007bff;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    ul.pagination li a:hover {
+      background-color: #eee;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      align-self: flex-end;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="brand">SubwayChat</div>
+</header>
+<div class="container">
+  <h1>게시글 목록</h1>
+  <a href="/posts/new" class="button">게시글 생성</a>
+  <div th:each="post : ${posts}" class="post">
+    <h2>
+      <a th:href="@{/posts/{id}(id=${post.id})}" th:text="${post.title}"></a>
+    </h2>
+  </div>
+
+  <div>
+    <ul class="pagination">
+      <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+        <a th:href="@{/posts(page=${i})}" th:text="${i + 1}">Page number</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- 에러 처리 -->
+<script th:if="${param.noPermission}">
+  alert('수정 권한이 존재하지 않습니다.');
+</script>
+
+<script th:if="${param.notExist}">
+  alert('게시글이 존재하지 않습니다.');
+</script>
+
+</body>
+</html>

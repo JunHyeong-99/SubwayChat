@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Websocket Chat</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header .brand {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        h1, .chat-list-title {
+            color: #333;
+            margin-top: 20px;
+            font-size: 2em;
+        }
+
+        .chat-list-title-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        li {
+            margin-bottom: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            width: calc(50% - 10px);
+            box-sizing: border-box;
+            text-align: center;
+            font-size: 1.2em;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination li a {
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #333;
+            border-radius: 3px;
+            background-color: #fff;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        .pagination li a.active {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .button:hover {
+            background-color: #555;
+        }
+
+        .post {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .post h2 {
+            color: #007bff;
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+
+        .post p {
+            color: #666;
+            margin: 0;
+        }
+
+        .posts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body onload="findAllRoom()">
+<header>
+    <div class="brand">SubwayChat</div>
+</header>
+<div class="container">
+    <div class="chat-list-title-container">
+        <label class="chat-list-title">채팅방 리스트</label>
+    </div>
+    <ul id="roomList"></ul>
+
+    <div class="posts-header">
+        <h1>게시글 목록</h1>
+        <a href="/posts/new" class="button">게시글 작성</a>
+    </div>
+    <div id="posts-container">
+        <div th:each="post, iterStat : ${posts}" class="post">
+            <h2>
+                <a th:href="@{/posts/{id}(id=${post.postId})}" th:text="${post.title}"></a>
+            </h2>
+        </div>
+    </div>
+    <div class="pagination-container">
+        <ul class="pagination">
+            <li th:if="${totalPages > 0}" th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                <a href="javascript:void(0);" th:attr="data-page=${i}" th:text="${i + 1}" class="page-link">Page number</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!-- 에러 처리 -->
+<script th:if="${param.noPermission}">
+    alert('수정 권한이 존재하지 않습니다.');
+</script>
+
+<script th:if="${param.notExist}">
+    alert('게시글이 존재하지 않습니다.');
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Pagination link click event
+        document.querySelectorAll('.page-link').forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                const page = event.target.getAttribute('data-page');
+                fetchPosts(page);
+            });
+        });
+
+        function fetchPosts(page) {
+            fetch(`/posts?page=${page}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    reloadPosts(data.posts);
+                    updatePagination(data.totalPages, page);
+                })
+                .catch(error => console.error('Error fetching posts:', error));
+        }
+
+        function reloadPosts(posts) {
+            const postsContainer = document.getElementById('posts-container');
+            postsContainer.innerHTML = ''; // Clear current posts
+
+            posts.forEach((post) => {
+                const postDiv = document.createElement('div');
+                postDiv.classList.add('post');
+
+                const postTitle = document.createElement('h2');
+                const postLink = document.createElement('a');
+                postLink.href = `/posts/${post.postId}`;
+                postLink.textContent = post.title;
+
+                postTitle.appendChild(postLink);
+                postDiv.appendChild(postTitle);
+                postsContainer.insertBefore(postDiv, postsContainer.firstChild);
+            });
+        }
+
+        function updatePagination(totalPages, currentPage) {
+            const paginationContainer = document.querySelector('.pagination');
+            paginationContainer.innerHTML = ''; // Clear current pagination
+
+            for (let i = 0; i < totalPages; i++) {
+                const pageItem = document.createElement('li');
+                const pageLink = document.createElement('a');
+                pageLink.href = 'javascript:void(0);';
+                pageLink.textContent = i + 1;
+                pageLink.setAttribute('data-page', i);
+                pageLink.classList.add('page-link');
+                if (i == currentPage) {
+                    pageLink.classList.add('active');
+                }
+                pageLink.addEventListener('click', function(event) {
+                    fetchPosts(i);
+                });
+
+                pageItem.appendChild(pageLink);
+                paginationContainer.appendChild(pageItem);
+            }
+        }
+    });
+
+    function findAllRoom() {
+        axios.get('/chat/rooms')
+            .then(response => {
+                const roomList = document.getElementById('roomList');
+                roomList.innerHTML = ''; // Clear previous items
+                response.data.forEach(room => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = room.subwayLine;
+                    listItem.addEventListener('click', function() {
+                        enterRoom(room.roomId);
+                    });
+                    roomList.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('chatRoom load fail:', error);
+            });
+    }
+
+    function enterRoom(roomId) {
+        var sender = [[${nickName}]];
+        localStorage.setItem('sender', sender);
+        localStorage.setItem('roomId', roomId);
+        location.href = '/chat/room/enter/' + roomId;
+    }
+</script>
+</body>
+</html>
